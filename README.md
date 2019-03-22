@@ -5,6 +5,7 @@ An interactive html grid generator. No more worrying about span, this generator 
 https://html-grid-template-generator.firebaseapp.com/
 <img src="screenshots/v1-grid.png" alt="V1 Grid Screenshot" class="inline"/>
 <img src="screenshots/v1-export.png" alt="V1 Export Screenshot" class="inline"/>
+<img src="screenshots/v1-result.png" alt="V1 Result Screenshot" class="inline"/>
 
 ## Functionality (v1)
 1) Add/Remove rows and columns.
