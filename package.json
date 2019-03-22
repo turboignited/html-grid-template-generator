@@ -1,0 +1,21 @@
+{
+  "name": "html-grid-template-generator",
+  "version": "1.0.0",
+  "description": "An interactive html grid generator. No more worrying about span, this generator handles the creation of a grid and placing elements interactively. It is similar to spreadsheets for numbers but instead for web design.",
+  "scripts": {
+    "start": "parcel src/index.html --port 8080 --open"
+  },
+  "keywords": [
+    "HTML5",
+    "Grid"
+  ],
+  "author": "TurboIgnited",
+  "license": "ISC",
+  "dependencies": {
+    "lorem-ipsum": "^2.0.0"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.2",
+    "typescript": "^3.3.4000"
+  }
+}
