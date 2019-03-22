@@ -2,6 +2,9 @@
 .cache/
 dist/
 
+# Package-Lock
+package-lock.json
+
 # Firebase
 .firebaserc
 firebase.json
