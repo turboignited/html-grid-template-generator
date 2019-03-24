@@ -11,7 +11,9 @@ export enum Elements {
     h2 = "h2",
     h3 = "h3",
     h4 = "h4",
-    h5 = "h5"
+    h5 = "h5",
+
+    div = "div"
 }
 
 type NumberInputChangedHandler = (value: number) => void;
@@ -28,10 +30,10 @@ export const delay = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const createElement = (tag: string): HTMLElement => {
+export const createElement = (tag: string): HTMLElement => {
     return document.createElement(tag);
 }
-const createText = (text: string): Text => {
+export const createText = (text: string = ""): Text => {
     return document.createTextNode(text);
 }
 
@@ -51,8 +53,7 @@ interface ParagraphRegularArguments {
 }
 export const createParagraphRegular = (args: ParagraphRegularArguments): HTMLParagraphElement => {
     const paragraph = createParagraph();
-    const text = createText(args.text);
-    paragraph.appendChild(text);
+    paragraph.appendChild(createText(args.text));
     if (args.editable) {
         paragraph.contentEditable = "true";
     }
@@ -66,11 +67,11 @@ interface ParagraphBoldArguments {
     text: string;
     center: boolean;
 }
+
 export const createParagraphBold = (args: ParagraphBoldArguments): HTMLParagraphElement => {
     const paragraph = createParagraph();
-    const text = createText(args.text);
     const bold = createBold();
-    bold.appendChild(text);
+    bold.appendChild(createText(args.text));
     paragraph.appendChild(bold);
     if (args.editable) {
         paragraph.contentEditable = "true";
@@ -95,9 +96,9 @@ export const createParagraphLoremIpsum = (args: ParagraphLoremIpsumArguments) =>
         }
     });
     if (args.bold) {
-        return createParagraphBold({ text: lorem.generateSentences(args.sentences), editable: true, center: false });
+        return createParagraphBold({ text: lorem.generateSentences(args.sentences), editable: args.editable, center: args.center });
     } else {
-        return createParagraphRegular({ text: lorem.generateSentences(args.sentences), editable: true, center: false });
+        return createParagraphRegular({ text: lorem.generateSentences(args.sentences), editable: args.editable, center: args.center });
     }
 }
 
@@ -179,14 +180,18 @@ interface SelectorArguments {
 }
 export const createSelector = (args: SelectorArguments): HTMLSelectElement => {
     const select: HTMLSelectElement = createElement("select") as HTMLSelectElement;
-    for (let i = 0; i < args.options.length; i++) {
-        const option = document.createElement("option");
-        option.value = args.options[i];
-        option.text = args.options[i];
-        select.options.add(option);
+    if (args.options != null) {
+        for (let i = 0; i < args.options.length; i++) {
+            const option = createElement("option") as HTMLOptionElement;
+            option.value = args.options[i];
+            option.text = args.options[i];
+            select.options.add(option);
+        }
     }
-    select.onchange = (ev: any) => {
-        args.handler(ev.target.value);
+    if (args.handler != null) {
+        select.onchange = (ev: any) => {
+            args.handler(ev.target.value);
+        }
     }
     return select;
 }
@@ -204,7 +209,9 @@ interface ButtonArguments {
 }
 export const createButton = (args: ButtonArguments): HTMLButtonElement => {
     const button: HTMLButtonElement = createElement("button") as HTMLButtonElement;
-    button.appendChild(args.content);
+    if (args.content != null) {
+        button.appendChild(args.content);
+    }
     return button;
 }
 

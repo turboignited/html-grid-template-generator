@@ -1,14 +1,16 @@
-import Grid from "./grid";
-import Body from "./body";
+import { createButtonWithClickHandler, createNumberInput, createParagraphBold, createParagraphRegular, createSelector, Elements } from "./elements/elements";
+import { Grid, GridConstructor } from "./grid";
 import GridExporter from "./grid-exporter";
-import { createSelector, createButtonWithClickHandler, createParagraphBold, createParagraphRegular, Elements, createNumberInput } from "./elements";
+import { GridHistory } from "./grid-history";
 
 
+window.onload = () => {
 
-window.onload = async () => {
-
+    const cellClickHandler = (history: GridHistory) => {
+        gridHistoryUndo.push(history);
+    }
     const units: string[] = ["px", "fr", "%"];
-    const gridSettings = {
+    const gridSettings: GridConstructor = {
         columns: 3,
         rows: 3,
         width: window.innerWidth - 100,
@@ -17,7 +19,8 @@ window.onload = async () => {
         heightUnit: units[0],
         gridGap: 0,
         margin: 0,
-        padding: 0
+        padding: 0,
+        cellClickedHandler: cellClickHandler
     }
     const gridDimensionsText = createParagraphRegular({
         text: `${gridSettings.columns}x${gridSettings.rows}`,
@@ -29,11 +32,16 @@ window.onload = async () => {
         editable: false,
         center: true
     });
+    const gridHistoryUndo: GridHistory[] = [];
+    const gridHistoryRedo: GridHistory[] = [];
 
-    Body.addElement(gridDimensionsText);
-    Body.addElement(elementSelectorText);
 
-    Body.addElement(
+
+
+    document.body.appendChild(gridDimensionsText);
+    document.body.appendChild(elementSelectorText);
+
+    document.body.appendChild(
         createButtonWithClickHandler({
             content: createParagraphBold({
                 center: false,
@@ -41,12 +49,12 @@ window.onload = async () => {
                 text: "Add Column"
             }),
             handler: () => {
-                grid.addColumn();
+                gridHistoryUndo.push(grid.addColumn());
                 gridDimensionsText.textContent = `${grid.columns}x${grid.rows}`;
             }
         }));
 
-    Body.addElement(
+    document.body.appendChild(
         createButtonWithClickHandler({
             content: createParagraphBold({
                 center: false,
@@ -54,12 +62,12 @@ window.onload = async () => {
                 text: "Add Row"
             }),
             handler: () => {
-                grid.addRow();
+                gridHistoryUndo.push(grid.addRow());
                 gridDimensionsText.textContent = `${grid.columns}x${grid.rows}`;
             }
         }));
 
-    Body.addElement(
+    document.body.appendChild(
         createButtonWithClickHandler({
             content: createParagraphBold({
                 center: false,
@@ -67,12 +75,12 @@ window.onload = async () => {
                 text: "Remove Column"
             }),
             handler: () => {
-                grid.removeLastColumn();
+                gridHistoryUndo.push(grid.removeLastColumn());
                 gridDimensionsText.textContent = `${grid.columns}x${grid.rows}`;
             }
         }));
 
-    Body.addElement(
+    document.body.appendChild(
         createButtonWithClickHandler({
             content: createParagraphBold({
                 center: false,
@@ -80,12 +88,44 @@ window.onload = async () => {
                 text: "Remove Row"
             }),
             handler: () => {
-                grid.removeLastRow();
+                gridHistoryUndo.push(grid.removeLastRow());
                 gridDimensionsText.textContent = `${grid.columns}x${grid.rows}`;
             }
         }));
 
-    Body.addElement(
+
+    document.body.appendChild(
+        createButtonWithClickHandler({
+            content: createParagraphBold({
+                center: false,
+                editable: false,
+                text: "Undo"
+            }),
+            handler: () => {
+                if (gridHistoryUndo.length > 0) {
+                    const undo = gridHistoryUndo.splice(gridHistoryUndo.length - 1, 1);
+                    gridHistoryRedo.push(grid.restoreHistory(undo[0]));
+                }
+            }
+        }));
+
+
+    document.body.appendChild(
+        createButtonWithClickHandler({
+            content: createParagraphBold({
+                center: false,
+                editable: false,
+                text: "Redo"
+            }),
+            handler: () => {
+                if (gridHistoryRedo.length > 0) {
+                    const redo = gridHistoryRedo.splice(gridHistoryRedo.length - 1, 1);
+                    gridHistoryUndo.push(grid.restoreHistory(redo[0]));
+                }
+            }
+        }));
+
+    document.body.appendChild(
         createSelector({
             options: Object.keys(Elements),
             handler: (value: string) => {
@@ -114,11 +154,11 @@ window.onload = async () => {
                     default:
                         break;
                 }
-                grid.setActiveElement(Elements[value]);
+                grid.activeElement = Elements[value];
             }
         }));
 
-    Body.addElement(
+    document.body.appendChild(
         createNumberInput({
             handler: (value: number) => {
                 if (value >= 0) {
@@ -128,7 +168,7 @@ window.onload = async () => {
             placeholder: "Grid Gap (0px)"
         })
     )
-    Body.addElement(
+    document.body.appendChild(
         createNumberInput({
             handler: (value: number) => {
                 if (value >= 0) {
@@ -138,7 +178,7 @@ window.onload = async () => {
             placeholder: "Margin (0px)"
         })
     )
-    Body.addElement(
+    document.body.appendChild(
         createNumberInput({
             handler: (value: number) => {
                 if (value >= 0) {
@@ -149,7 +189,7 @@ window.onload = async () => {
         })
     )
 
-    Body.addElement(
+    document.body.appendChild(
         createButtonWithClickHandler({
             content: createParagraphBold({
                 center: false,
@@ -171,6 +211,7 @@ window.onload = async () => {
         widthUnit: gridSettings.widthUnit,
         gridGap: gridSettings.gridGap,
         margin: gridSettings.margin,
-        padding: gridSettings.padding
+        padding: gridSettings.padding,
+        cellClickedHandler: gridSettings.cellClickedHandler
     });
 }

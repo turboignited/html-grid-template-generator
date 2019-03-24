@@ -1,5 +1,5 @@
-import { createHeadingLoremIpsum, Elements } from "./elements";
 import { DeletableBodyElement } from "./deletable-body-element";
+import { createHeadingLoremIpsum, Elements } from "./elements";
 
 export default class EditableHeadingElement extends DeletableBodyElement {
     public updateStyle(): void {

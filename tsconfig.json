@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "allowJs": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "dom",
+            "es6"
+        ]
+    }
+}

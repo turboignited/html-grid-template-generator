@@ -1,19 +1,18 @@
-import GridCellElement from "./grid-cell-element";
-import Grid from "./grid";
+import Coordinate from "./coordinate";
+import GridCellElement from "./elements/grid-cell-element";
+import { Grid } from "./grid";
 
 interface GridCellConstructor {
-    x: number;
-    y: number;
-    xSpan: number;
-    ySpan: number;
+    position: Coordinate;
+    span: Coordinate;
     grid: Grid;
+
+    element?: HTMLElement;
 }
 
 export default class GridCell {
-    public y: number;
-    public x: number;
-    public ySpan: number;
-    public xSpan: number;
+    public position: Coordinate;
+    public span: Coordinate;
     public _element: GridCellElement;
     private _grid: Grid;
 
@@ -21,22 +20,25 @@ export default class GridCell {
         return this._element;
     }
     constructor(args: GridCellConstructor) {
-        this.y = args.y;
-        this.x = args.x;
-        this.ySpan = args.ySpan;
-        this.xSpan = args.xSpan;
+        this.position = args.position;
+        this.span = args.span;
         this._grid = args.grid;
-        this._element = new GridCellElement({ cell: this, grid: this._grid });
-        this._element.onClick = () => {
-            this.onClicked();
+        if (args.element == null) {
+            this._element = new GridCellElement({ cell: this });
+        } else {
+            this._element = new GridCellElement({ cell: this, element: args.element });
         }
+        this._element.setClickHandler(() => {
+            this.onClicked();
+        });
+
     }
 
-    public delete(): void {
+    public deleteElement(): void {
         this._element.removeSelf();
     }
 
-    private onClicked(): void {
+    public onClicked(): void {
         this._grid.onClickedCell(this);
     }
 

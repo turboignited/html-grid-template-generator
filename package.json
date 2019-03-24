@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "An interactive html grid generator. No more worrying about span, this generator handles the creation of a grid and placing elements interactively. It is similar to spreadsheets for numbers but instead for web design.",
   "scripts": {
-    "start": "parcel src/index.html --port 8080 --open"
+    "start": "jest --coverage && parcel src/index.html --port 8080 --open",
+    "test": "jest --coverage --watchAll"
   },
   "keywords": [
     "HTML5",
@@ -15,7 +16,14 @@
     "lorem-ipsum": "^2.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.11",
+    "babel-jest": "^24.5.0",
+    "jest": "^24.5.0",
     "parcel": "^1.12.2",
+    "ts-jest": "^24.0.0",
     "typescript": "^3.3.4000"
   }
 }

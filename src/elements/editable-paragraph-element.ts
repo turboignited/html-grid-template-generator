@@ -1,5 +1,5 @@
-import { createParagraphLoremIpsum } from "./elements";
 import { DeletableBodyElement } from "./deletable-body-element";
+import { createParagraphLoremIpsum } from "./elements";
 
 export default class EditableParagraphElement extends DeletableBodyElement {
     constructor() {
