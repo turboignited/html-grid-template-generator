@@ -1,6 +1,6 @@
 {
   "name": "html-grid-template-generator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An interactive html grid generator. No more worrying about span, this generator handles the creation of a grid and placing elements interactively. It is similar to spreadsheets for numbers but instead for web design.",
   "scripts": {
     "start": "jest --coverage && parcel src/index.html --port 8080 --open",
