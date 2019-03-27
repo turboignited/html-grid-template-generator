@@ -21,7 +21,7 @@ export default class GridExporter {
             for (let y = 0; y < grid.cells.length; y++) {
                 for (let x = 0; x < grid.cells[y].length; x++) {
                     const cell: Cell = grid.cells[y][x];
-                    if (cell != null) {
+                    if (!cell.hidden) {
                         contents.push(`<div style="grid-row: ${cell.position.y + 1} / span ${cell.span.y}; grid-column: ${cell.position.x + 1} / span ${cell.span.x}";>`);
                         if (cell.element.children.length > 0) {
                             for (let i = 0; i < cell.element.children.length; i++) {
