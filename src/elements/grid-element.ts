@@ -1,6 +1,6 @@
 import { Grid } from "../grid";
 import { BodyElement } from "./body-element";
-import { createDiv, Elements } from "./elements";
+import { createDiv } from "./elements";
 
 interface GridElementConstructor {
     grid: Grid;
@@ -9,7 +9,7 @@ export default class GridElement extends BodyElement {
     private _grid: Grid;
 
     constructor(args: GridElementConstructor) {
-        super({ element: createDiv(), elementType: Elements.div });
+        super({ element: createDiv() });
         this._grid = args.grid;
         this.updateStyle();
     }

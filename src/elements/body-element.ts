@@ -2,7 +2,6 @@ import { Elements } from "./elements";
 
 export interface BodyElementConstructor {
     element: HTMLElement;
-    elementType: Elements;
 }
 
 /**
@@ -14,7 +13,6 @@ export abstract class BodyElement {
 
     private _element: HTMLElement;
     private _id: number;
-
     private _elementType: Elements;
 
     /**
@@ -38,6 +36,13 @@ export abstract class BodyElement {
         return this._element.parentElement;
     }
 
+    public get hidden(): boolean {
+        return this.element.hidden;
+    }
+
+    public set hidden(value: boolean) {
+        this.element.hidden = value;
+    }
 
     public get elementType(): Elements {
         return this._elementType;
@@ -75,20 +80,14 @@ export abstract class BodyElement {
         }
     }
 
-    public removeElement(element: HTMLElement) {
-        if (this._element == element) {
-            element.remove();
-        }
-    }
-
     /**
      * Adds new element to the body
      * @param args BodyElementConstructor
      */
     constructor(args: BodyElementConstructor) {
         this._element = args.element;
+        this._elementType = args.element.tagName.toLocaleLowerCase() as Elements;
         this._id = Math.random() * Date.now();
-        this._elementType = args.elementType;
         document.body.appendChild(args.element);
     }
 

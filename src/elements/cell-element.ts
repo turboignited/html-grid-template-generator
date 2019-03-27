@@ -1,18 +1,15 @@
-import GridCell from "../grid-cell";
+import Cell from "../cell";
 import { BodyElement } from "./body-element";
-import { createDiv, Elements } from "./elements";
+import { createDiv } from "./elements";
 
-interface GridCellElementConstructor {
-    cell: GridCell;
+interface CellElementConstructor {
+    cell: Cell;
     element?: HTMLElement;
 }
-export default class GridCellElement extends BodyElement {
-    private _cell: GridCell;
-    constructor(args: GridCellElementConstructor) {
-        super({
-            element: args.element ? args.element : createDiv(),
-            elementType: args.element ? args.element.tagName as Elements : Elements.div
-        });
+export default class CellElement extends BodyElement {
+    private _cell: Cell;
+    constructor(args: CellElementConstructor) {
+        super({ element: args.element ? args.element : createDiv() });
         this._cell = args.cell;
         this.updateStyle();
     }

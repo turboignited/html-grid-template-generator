@@ -1,5 +1,5 @@
+import Cell from "./cell";
 import { Grid } from "./grid";
-import GridCell from "./grid-cell";
 export default class GridExporter {
 
     public static generate(grid: Grid) {
@@ -20,7 +20,7 @@ export default class GridExporter {
             contents[0] += `">`;
             for (let y = 0; y < grid.cells.length; y++) {
                 for (let x = 0; x < grid.cells[y].length; x++) {
-                    const cell: GridCell = grid.cells[y][x];
+                    const cell: Cell = grid.cells[y][x];
                     if (cell != null) {
                         contents.push(`<div style="grid-row: ${cell.position.y + 1} / span ${cell.span.y}; grid-column: ${cell.position.x + 1} / span ${cell.span.x}";>`);
                         if (cell.element.children.length > 0) {

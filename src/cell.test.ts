@@ -1,11 +1,10 @@
+import Cell from "./cell";
 import Coordinate from "./coordinate";
-import GridCell from "./grid-cell";
 
-var cell: GridCell;
+var cell: Cell;
 
 beforeAll(() => {
-    cell = new GridCell({
-        grid: null,
+    cell = new Cell({
         position: new Coordinate(0, 0),
         span: new Coordinate(0, 0)
     });
@@ -20,9 +19,11 @@ test("should attach click handler", () => {
     expect(cell.element.element.onclick).not.toBeNull();
 });
 
-test("should remove GridCellElement from DOM", () => {
-    const element = cell.element.element;
-    expect(document.body.firstElementChild).toBe(element);
-    cell.deleteElement();
-    expect(document.body.firstElementChild).toBeNull();
+test("should hide from DOM", () => {
+    expect(document.body.firstElementChild.getAttribute("hidden")).toBeNull();
+    cell.hidden = true;
+    expect(document.body.firstElementChild.getAttribute("hidden")).toEqual("");
+    cell.hidden = false;
+    expect(document.body.firstElementChild.getAttribute("hidden")).toBeNull();
+
 });
