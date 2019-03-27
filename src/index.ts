@@ -1,7 +1,6 @@
 import { createButtonWithClickHandler, createNumberInput, createParagraphBold } from "./elements/elements";
 import { Grid } from "./grid";
 import GridExporter from "./grid-exporter";
-import { History } from "./history";
 
 window.onload = () => {
     const units: string[] = ["px", "fr", "%"];
@@ -54,32 +53,6 @@ window.onload = () => {
             }
         }));
 
-
-    document.body.appendChild(
-        createButtonWithClickHandler({
-            content: createParagraphBold({
-                center: false,
-                editable: false,
-                text: "Undo"
-            }),
-            handler: () => {
-
-            }
-        }));
-
-
-    document.body.appendChild(
-        createButtonWithClickHandler({
-            content: createParagraphBold({
-                center: false,
-                editable: false,
-                text: "Redo"
-            }),
-            handler: () => {
-
-            }
-        }));
-
     document.body.appendChild(
         createNumberInput({
             handler: (value: number) => {
@@ -123,7 +96,6 @@ window.onload = () => {
             }
         }));
 
-    const history: History = new History();
     const grid: Grid = new Grid({
         columns: 3,
         rows: 3,
