@@ -149,18 +149,27 @@ export class Grid {
     public initializeCells(): void {
         this._cells = [];
         for (let y = 0; y < this._rows; y++) {
-            this._cells[y] = [];
             for (let x = 0; x < this._columns; x++) {
                 this.addCell(new Coordinate(x, y), new Coordinate(1, 1));
             }
         }
     }
     public setCell(cell: Cell, position: Coordinate): void {
+        if (position.y == this._cells.length) {
+            this._cells[position.y] = [];
+        } else if (position.y > this._cells.length) {
+            // skipping too many rows
+            return;
+        }
         this._cells[position.y][position.x] = cell;
     }
 
     public getCell(position: Coordinate): Cell {
+        if (position.y > this._cells.length - 1 || position.x > this._cells[0].length - 1 || position.x < 0 || position.y < 0) {
+            return null;
+        }
         return this._cells[position.y][position.x];
+
     }
 
     public moveCell(cell: Cell, position: Coordinate): void {
@@ -176,7 +185,6 @@ export class Grid {
                 this.getCell(new Coordinate(x, this._rows)).hidden = false;
             }
         } else {
-            this._cells[this._rows] = [];
             for (let x = 0; x < this._columns; x++) {
                 this.addCell(new Coordinate(x, this._rows), new Coordinate(1, 1));
             }
@@ -196,15 +204,16 @@ export class Grid {
         this.columns++;
     }
 
-    public removeLastColumn(): void {
-        if (this._columns > 2) {
+    public hideLastColumn(): void {
+        if (this._columns > 0) {
             for (let y = 0; y < this._rows; y++) {
-                let cell = this._cells[y][this._columns - 1];
-                if (cell == null) {
-                    // Find nearest cell on this row
-                    for (let x = this._columns - 1; x >= 0; x--) {
-                        if (this._cells[y][x] != null) {
-                            cell = this._cells[y][x];
+                let cell = this.getCell(new Coordinate(this._columns - 1, y));
+                if (cell.hidden) {
+                    // Find nearest not hidden cell on this row
+                    for (let x = this._columns - 2; x >= 0; x--) {
+                        const c = this.getCell(new Coordinate(x, y));
+                        if (!c.hidden) {
+                            cell = c;
                             break;
                         }
                     }
@@ -216,21 +225,22 @@ export class Grid {
                 if (cell.span.x > 1) {
                     cell.span.x--;
                 } else {
-                    this.hideCell(cell);
+                    cell.hidden = true;
                 }
             }
             this.columns--;
         }
     }
 
-    public removeLastRow(): void {
-        if (this._rows > 2) {
+    public hideLastRow(): void {
+        if (this._rows > 0) {
             for (let x = 0; x < this._columns; x++) {
-                let cell = this._cells[this._rows - 1][x];
-                if (cell == null) {
-                    for (let y = this._rows - 1; y >= 0; y--) {
-                        if (this._cells[y][x] != null) {
-                            cell = this._cells[y][x];
+                let cell = this.getCell(new Coordinate(x, this._rows - 1));
+                if (cell.hidden) {
+                    for (let y = this._rows - 2; y >= 0; y--) {
+                        const c = this.getCell(new Coordinate(x, y));
+                        if (!c.hidden) {
+                            cell = c;
                             break;
                         }
                     }
@@ -241,7 +251,7 @@ export class Grid {
                 if (cell.span.y > 1) {
                     cell.span.y--;
                 } else {
-                    this.hideCell(cell);
+                    cell.hidden = true;
                 }
             }
             this.rows--;

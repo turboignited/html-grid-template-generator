@@ -26,18 +26,18 @@ export default class Cell {
     }
 
     public set position(coordinate: Coordinate) {
-        CellHistory.cellPositionChanged({ cell: this, after: coordinate });
         this._position = coordinate;
         this._element.updateStyle();
+        CellHistory.cellPositionChanged({ cell: this, after: coordinate });
     }
     public get position(): Coordinate {
         return this._position;
     }
 
     public set span(coordinate: Coordinate) {
-        CellHistory.cellSpanChanged({ cell: this, after: coordinate });
         this._span = coordinate;
         this._element.updateStyle();
+        CellHistory.cellSpanChanged({ cell: this, after: coordinate });
     }
     public get span(): Coordinate {
         return this._span;
@@ -45,7 +45,11 @@ export default class Cell {
 
     constructor(args: CellConstructor) {
         this._position = args.position;
-        this._span = args.span;
+        if (args.span.x > 0 && args.span.y > 0) {
+            this._span = args.span;
+        } else {
+            this._span = new Coordinate(1, 1);
+        }
         this._element = new CellElement({ cell: this });
         this._element.setClickHandler(() => {
             this.onClicked();

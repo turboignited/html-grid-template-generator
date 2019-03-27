@@ -38,7 +38,7 @@ window.onload = () => {
                 text: "Remove Column"
             }),
             handler: () => {
-                grid.removeLastColumn();
+                grid.hideLastColumn();
             }
         }));
 
@@ -50,7 +50,7 @@ window.onload = () => {
                 text: "Remove Row"
             }),
             handler: () => {
-                grid.removeLastRow();
+                grid.hideLastRow();
             }
         }));
 
