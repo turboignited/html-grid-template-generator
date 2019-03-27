@@ -1,7 +1,7 @@
 import Cell from "./cell";
 import Coordinate from "./coordinate";
 import GridElement from "./elements/grid-element";
-import { GridHistory } from "./grid-history";
+import { GridSelection } from "./grid-selection";
 
 export interface GridConstructor {
     width: number;
@@ -39,6 +39,11 @@ export class Grid {
      */
     private _cells: Cell[][];
     private _element: GridElement;
+    private _selection: GridSelection;
+
+    public get selection(): GridSelection {
+        return this._selection;
+    }
 
     public get element(): GridElement {
         return this._element;
@@ -108,13 +113,11 @@ export class Grid {
         this._element.updateStyle();
     }
     public set columns(value: number) {
-        GridHistory.columnsChanged(value > this._columns)
         this._columns = value;
         this._element.updateStyle();
     }
 
     public set rows(value: number) {
-        GridHistory.rowsChanged(value > this._rows);
         this._rows = value;
         this._element.updateStyle();
     }
@@ -142,6 +145,7 @@ export class Grid {
         this._margin = args.margin;
         this._padding = args.padding;
         this._element = new GridElement({ grid: this });
+        this._selection = new GridSelection({ grid: this });
         this.initializeCells();
         this._element.updateStyle();
     }
@@ -205,7 +209,7 @@ export class Grid {
     }
 
     public hideLastColumn(): void {
-        if (this._columns > 0) {
+        if (this._columns > 2) {
             for (let y = 0; y < this._rows; y++) {
                 let cell = this.getCell(new Coordinate(this._columns - 1, y));
                 if (cell.hidden) {
@@ -233,7 +237,7 @@ export class Grid {
     }
 
     public hideLastRow(): void {
-        if (this._rows > 0) {
+        if (this._rows > 2) {
             for (let x = 0; x < this._columns; x++) {
                 let cell = this.getCell(new Coordinate(x, this._rows - 1));
                 if (cell.hidden) {
@@ -261,7 +265,8 @@ export class Grid {
     public addCell(position: Coordinate, span: Coordinate): void {
         const cell = new Cell({
             position: position,
-            span: span
+            span: span,
+            grid: this
         });
         this.setCell(cell, position);
         this._element.addChild(cell.element.element);
